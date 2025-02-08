@@ -21,12 +21,14 @@ const days = [
 interface TransportationFormProps {
   isVisible: boolean;
   onCancel: () => void;
+  onOk: () => void;
   editingRecord?: Transportation | null;
 }
 
 const TransportationForm: React.FC<TransportationFormProps> = ({
   isVisible,
   onCancel,
+  onOk,
   editingRecord
 }) => {
   const [form] = Form.useForm();
@@ -49,7 +51,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
         message.success('Transportation created successfully');
       }
       form.resetFields();
-      onCancel();
+      onOk();
     } catch (error) {
       message.error('Operation failed');
     }
