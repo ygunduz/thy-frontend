@@ -7,12 +7,17 @@ import Login from './pages/Login';
 import Locations from './pages/locations/Locations';
 import Transportations from './pages/transportations/Transportations';
 import RoutesPage from './pages/routes/Routes';
+import Forbidden from "@/components/Forbidden";
 
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({children}) => {
-    const {isAuthenticated} = useSelector(selectAuth);
+const ProtectedRoute: React.FC<{ children: React.ReactNode, roles: string[] }> = ({children, roles}) => {
+    const {isAuthenticated, role} = useSelector(selectAuth);
 
     if (!isAuthenticated) {
         return <Navigate to="/login" replace/>;
+    }
+
+    if(!role || !roles.includes(role)) {
+        return <Forbidden/>;
     }
 
     return children;
@@ -39,7 +44,7 @@ const App: React.FC = () => {
                     <Route
                         path="/"
                         element={
-                            <ProtectedRoute>
+                            <ProtectedRoute roles={['ROLE_ADMIN', 'ROLE_AGENCY']}>
                                 <RoleBasedRedirect/>
                             </ProtectedRoute>
                         }
@@ -47,7 +52,7 @@ const App: React.FC = () => {
                     <Route
                         path="/locations"
                         element={
-                            <ProtectedRoute>
+                            <ProtectedRoute roles={['ROLE_ADMIN']}>
                                 <Locations/>
                             </ProtectedRoute>
                         }
@@ -55,7 +60,7 @@ const App: React.FC = () => {
                     <Route
                         path="/transportations"
                         element={
-                            <ProtectedRoute>
+                            <ProtectedRoute roles={['ROLE_ADMIN']}>
                                 <Transportations/>
                             </ProtectedRoute>
                         }
@@ -63,7 +68,7 @@ const App: React.FC = () => {
                     <Route
                         path="/routes"
                         element={
-                            <ProtectedRoute>
+                            <ProtectedRoute roles={['ROLE_ADMIN', 'ROLE_AGENCY']}>
                                 <RoutesPage/>
                             </ProtectedRoute>
                         }

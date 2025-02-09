@@ -1,24 +1,20 @@
 import React, {useCallback} from 'react';
-import {Button, DatePicker, Divider, Form, Select, Typography} from "antd";
-import {useGetLocationsQuery} from "@/services/locationsApi.ts";
-import {Location as LocationEntity} from "@/model/Location.ts";
-import {useLazyGetRoutesQuery} from "@/services/routesApi.ts";
+import {Button, DatePicker, Divider, Form, Typography} from "antd";
+import {useLazyGetRoutesQuery} from "@/services/routesApi";
 import dayjs from "dayjs";
-import RouteList from "@/pages/routes/RouteList.tsx";
+import RouteList from "@/pages/routes/RouteList";
+import {LocationSelect} from "@/components/LocationSelect.tsx";
 
-const {Option} = Select;
 const {Title} = Typography;
 
 const Routes: React.FC = () => {
-
-    const {data: locationsData} = useGetLocationsQuery({size: 100});
     const [fetchRoutes, {isLoading, data}] = useLazyGetRoutesQuery();
     const {routes} = data ?? {};
 
     const onFinish = useCallback((values: any) => {
         fetchRoutes({
-            origin: values.origin,
-            destination: values.destination,
+            origin: values.origin.value,
+            destination: values.destination.value,
             date: dayjs(values.date).local().format('YYYY-MM-DD')
         })
     }, [fetchRoutes]);
@@ -31,30 +27,24 @@ const Routes: React.FC = () => {
                 disabled={isLoading}
             >
                 <Form.Item
-                    name="origin"
                     label="Origin"
+                    name="origin"
                     rules={[{required: true, message: 'Please select origin location!'}]}
                 >
-                    <Select placeholder="Origin">
-                        {locationsData?.content?.map((location: LocationEntity) => (
-                            <Option key={location.id} value={location.id}>
-                                {location.name}
-                            </Option>
-                        ))}
-                    </Select>
+                    <LocationSelect
+                        placeholder="Origin"
+                        style={{width: 200}}
+                    />
                 </Form.Item>
                 <Form.Item
-                    name="destination"
                     label="Destination"
+                    name="destination"
                     rules={[{required: true, message: 'Please select destination location!'}]}
                 >
-                    <Select placeholder="Destination">
-                        {locationsData?.content?.map((location: LocationEntity) => (
-                            <Option key={location.id} value={location.id}>
-                                {location.name}
-                            </Option>
-                        ))}
-                    </Select>
+                    <LocationSelect
+                        placeholder="Destination"
+                        style={{width: 200}}
+                    />
                 </Form.Item>
                 <Form.Item label="Date" name="date" rules={[{required: true, message: 'Please select date!'}]}>
                     <DatePicker/>

@@ -11,6 +11,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {logout, selectAuth} from '@/features/authSlice';
 import {MenuInfo} from "rc-menu/lib/interface";
 import { Outlet } from 'react-router-dom';
+import {useAuthNavigate} from "@/hooks/useAuthNavigate.ts";
 
 const {Header, Sider, Content} = Layout;
 const {Title} = Typography;
@@ -48,6 +49,7 @@ const getMenuItems = (role: string | null) => {
 }
 
 const AppLayout: React.FC = () => {
+    useAuthNavigate();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const {role} = useSelector(selectAuth);

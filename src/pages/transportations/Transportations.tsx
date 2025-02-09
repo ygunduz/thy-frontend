@@ -25,7 +25,7 @@ const Transportations: React.FC = () => {
 
     const handleDelete = async (id: number) => {
         try {
-            await deleteTransportation(id);
+            await deleteTransportation(id).unwrap();
             refetch();
             message.success('Transportation deleted successfully');
         } catch (error) {

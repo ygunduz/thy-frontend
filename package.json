@@ -12,7 +12,9 @@
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
     "@reduxjs/toolkit": "^2.5.1",
+    "@types/lodash": "^4.17.15",
     "antd": "^5.23.4",
+    "lodash": "^4.17.21",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.2.0",
@@ -31,4 +33,4 @@
     "typescript": "^5.7.3",
     "vite": "^5.4.14"
   }
-} 
+}

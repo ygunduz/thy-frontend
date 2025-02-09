@@ -24,7 +24,7 @@ const Locations: React.FC = () => {
 
     const handleDelete = async (id: number) => {
         try {
-            await deleteLocation(id);
+            await deleteLocation(id).unwrap();
             refetch();
             message.success('Location deleted successfully');
         } catch (error) {
