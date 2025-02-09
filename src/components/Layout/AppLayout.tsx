@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {Layout, Menu, Typography, theme} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import {
@@ -9,6 +9,8 @@ import {
 } from '@ant-design/icons';
 import {useDispatch, useSelector} from 'react-redux';
 import {logout, selectAuth} from '@/features/authSlice';
+import {MenuInfo} from "rc-menu/lib/interface";
+import { Outlet } from 'react-router-dom';
 
 const {Header, Sider, Content} = Layout;
 const {Title} = Typography;
@@ -45,7 +47,7 @@ const getMenuItems = (role: string | null) => {
     return menuItems;
 }
 
-const AppLayout: React.FC<{ children: React.ReactNode }> = ({children}) => {
+const AppLayout: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const {role} = useSelector(selectAuth);
@@ -54,14 +56,15 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({children}) => {
         token: {colorBgContainer, borderRadiusLG},
     } = theme.useToken();
 
-    const handleMenuClick = (key: string) => {
+    const handleMenuClick = useCallback((info: MenuInfo) => {
+        const {key} = info;
         if (key === 'logout') {
             dispatch(logout());
             navigate('/login');
         } else {
             navigate(key);
         }
-    };
+    }, [dispatch, navigate]);
 
     const menuItems = useMemo(() => {
         return getMenuItems(role);
@@ -73,7 +76,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({children}) => {
                 <Menu theme="dark"
                       defaultSelectedKeys={[role === 'ROLE_ADMIN' ? '/locations' : '/routes']}
                       mode="inline" items={menuItems}
-                      onClick={({key}) => handleMenuClick(key)}
+                      onClick={handleMenuClick}
                 />
             </Sider>
             <Layout>
@@ -89,7 +92,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({children}) => {
                             borderRadius: borderRadiusLG,
                         }}
                     >
-                        {children}
+                        <Outlet/>
                     </div>
                 </Content>
             </Layout>
